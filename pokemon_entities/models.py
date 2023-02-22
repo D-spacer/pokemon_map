@@ -8,6 +8,7 @@ class Pokemon(models.Model):
     id = models.BigAutoField(primary_key=True, verbose_name='ID')
     name = models.CharField(max_length=200)
     image = models.ImageField(blank=True, null=True, upload_to='images')
+    objects = models.Manager()
 
     def __str__(self):
         return self.name
@@ -24,3 +25,4 @@ class PokemonEntity(models.Model):
     strength = models.IntegerField(null=True)
     defence = models.IntegerField(null=True)
     stamina = models.IntegerField(null=True)
+    objects = models.Manager()
