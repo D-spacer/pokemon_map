@@ -9,6 +9,10 @@ class Pokemon(models.Model):
     name = models.CharField(max_length=200)
     image = models.ImageField(blank=True, null=True, upload_to='images')
     objects = models.Manager()
+    title_ru = models.CharField(max_length=200, blank=True)
+    title_en = models.CharField(max_length=200, blank=True)
+    title_jp = models.CharField(max_length=200, blank=True)
+    description = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
