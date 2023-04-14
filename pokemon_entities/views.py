@@ -43,7 +43,7 @@ def show_all_pokemons(request):
         pokemons_on_page.append({
             'pokemon_id': pokemon.id,
             'img_url': request.build_absolute_uri(pokemon.image.url),
-            'title_ru': pokemon.name,
+            'title_ru': pokemon.title_ru,
         })
 
     return render(request, 'mainpage.html', context={
@@ -62,12 +62,28 @@ def show_pokemon(request, pokemon_id):
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon_entity in PokemonEntity.objects.filter(pokemon=requested_pokemon):
-        add_pokemon(
-            folium_map, pokemon_entity.lat,
-            pokemon_entity.lon,
-            request.build_absolute_uri(pokemon_entity.pokemon.image.url)
-        )
+        if pokemon_entity.appeared_at < localtime() < pokemon_entity.disappeared_at:
+            add_pokemon(
+                folium_map,
+                pokemon_entity.lat,
+                pokemon_entity.lon,
+                request.build_absolute_uri(pokemon_entity.pokemon.image.url)
+            )
 
     return render(request, 'pokemon.html', context={
-        'map': folium_map._repr_html_(), 'pokemon': pokemon
-    })
+        'map': folium_map._repr_html_(),
+        'pokemon': requested_pokemon,
+        'img_url': request.build_absolute_uri(requested_pokemon.pokemon.image.url),
+        "previous_evolution": {
+            "title_ru": requested_pokemon.children.first().title_ru,
+            "pokemon_id": requested_pokemon.children.first().id,
+            "img_url": requested_pokemon.children.first().image.url
+        },
+        "next_evolution": {
+            "title_ru": requested_pokemon.children.first().title_ru,
+            "pokemon_id": requested_pokemon.children.first().id,
+            "img_url": requested_pokemon.children.first().image.url
+        }
+    }
+                  )
+

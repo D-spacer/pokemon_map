@@ -5,23 +5,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 class Pokemon(models.Model):
-    id = models.BigAutoField(primary_key=True, verbose_name='ID')
-    name = models.CharField(max_length=200)
     image = models.ImageField(blank=True, null=True, upload_to='images')
-    objects = models.Manager()
     title_ru = models.CharField(max_length=200, blank=True)
     title_en = models.CharField(max_length=200, blank=True)
     title_jp = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)
+    child = models.ForeignKey("self", null=True, blank=True, on_delete=models.DO_NOTHING, related_name='children')
+    objects = models.Manager()
 
     def __str__(self):
-        return self.name
+        return self.title_ru
 
 
 class PokemonEntity(models.Model):
     lat = models.FloatField(null=True)
     lon = models.FloatField(null=True)
-    pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE)
+    pokemon = models.ForeignKey(Pokemon, on_delete=models.DO_NOTHING, related_name='entities')
     appeared_at = models.DateTimeField(null=True)
     disappeared_at = models.DateTimeField(null=True)
     level = models.IntegerField(null=True)
