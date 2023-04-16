@@ -52,12 +52,7 @@ def show_all_pokemons(request):
 
 
 def show_pokemon(request, pokemon_id):
-    for pokemon in Pokemon.objects.all():
-        if pokemon.id == int(pokemon_id):
-            requested_pokemon = pokemon
-            break
-    else:
-        return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
+    requested_pokemon = get_object_or_404(Pokemon, id=int(pokemon_id))
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon_entity in PokemonEntity.objects.filter(pokemon=requested_pokemon, pokemon_entity.appeared_at < localtime() < pokemon_entity.disappeared_at):
@@ -68,20 +63,24 @@ def show_pokemon(request, pokemon_id):
             request.build_absolute_uri(pokemon_entity.pokemon.image.url)
         )
 
+    serialized_previous = {
+        "title_ru": requested_pokemon.children.first().title_ru,
+        "pokemon_id": requested_pokemon.children.first().id,
+        "img_url": requested_pokemon.children.first().image.url
+    }
+        
+    serialized_next =  {
+        "title_ru": requested_pokemon.children.first().title_ru,
+        "pokemon_id": requested_pokemon.children.first().id,
+        "img_url": requested_pokemon.children.first().image.url
+    }
+        
     return render(request, 'pokemon.html', context={
         'map': folium_map._repr_html_(),
         'pokemon': requested_pokemon,
         'img_url': request.build_absolute_uri(requested_pokemon.pokemon.image.url),
-        "previous_evolution": {
-            "title_ru": requested_pokemon.children.first().title_ru,
-            "pokemon_id": requested_pokemon.children.first().id,
-            "img_url": requested_pokemon.children.first().image.url
-        },
-        "next_evolution": {
-            "title_ru": requested_pokemon.children.first().title_ru,
-            "pokemon_id": requested_pokemon.children.first().id,
-            "img_url": requested_pokemon.children.first().image.url
-        }
+        "previous_evolution": serialized_previous,
+        "next_evolution": serialized_next
     }
-                  )
+                 )
 
