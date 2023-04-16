@@ -30,13 +30,12 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
 
 def show_all_pokemons(request):
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
-    for pokemon_entity in PokemonEntity.objects.all():
-        if pokemon_entity.appeared_at < localtime() < pokemon_entity.disappeared_at:
-            add_pokemon(
-                folium_map, pokemon_entity.lat,
-                pokemon_entity.lon,
-                request.build_absolute_uri(pokemon_entity.pokemon.image.url)
-            )
+    for pokemon_entity in PokemonEntity.objects.filter(pokemon_entity.appeared_at < localtime() < pokemon_entity.disappeared_at):
+        add_pokemon(
+            folium_map, pokemon_entity.lat,
+            pokemon_entity.lon,
+            request.build_absolute_uri(pokemon_entity.pokemon.image.url)
+        )
 
     pokemons_on_page = []
     for pokemon in Pokemon.objects.all():
@@ -61,14 +60,13 @@ def show_pokemon(request, pokemon_id):
         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
-    for pokemon_entity in PokemonEntity.objects.filter(pokemon=requested_pokemon):
-        if pokemon_entity.appeared_at < localtime() < pokemon_entity.disappeared_at:
-            add_pokemon(
-                folium_map,
-                pokemon_entity.lat,
-                pokemon_entity.lon,
-                request.build_absolute_uri(pokemon_entity.pokemon.image.url)
-            )
+    for pokemon_entity in PokemonEntity.objects.filter(pokemon=requested_pokemon, pokemon_entity.appeared_at < localtime() < pokemon_entity.disappeared_at):
+        add_pokemon(
+            folium_map,
+            pokemon_entity.lat,
+            pokemon_entity.lon,
+            request.build_absolute_uri(pokemon_entity.pokemon.image.url)
+        )
 
     return render(request, 'pokemon.html', context={
         'map': folium_map._repr_html_(),
