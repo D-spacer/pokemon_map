@@ -5,8 +5,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 class Pokemon(models.Model):
-    image = models.ImageField(blank=True, null=True, upload_to='images', verbose_name='Изображение')
-    title_ru = models.CharField(max_length=200, blank=True, verbose_name='Русское название')
+    image = models.ImageField(upload_to='images', verbose_name='Изображение')
+    title_ru = models.CharField(max_length=200, verbose_name='Русское название')
     title_en = models.CharField(max_length=200, blank=True, verbose_name='Английское название')
     title_jp = models.CharField(max_length=200, blank=True, verbose_name='Японское название')
     description = models.TextField(blank=True, verbose_name='Описание')
