@@ -11,7 +11,6 @@ class Pokemon(models.Model):
     title_jp = models.CharField(max_length=200, blank=True, verbose_name='Японское название')
     description = models.TextField(blank=True, verbose_name='Описание')
     child = models.ForeignKey("self", null=True, blank=True, on_delete=models.DO_NOTHING, related_name='children', , verbose_name='Предыдущая эволюция')
-    objects = models.Manager()
 
     def __str__(self):
         return self.title_ru
@@ -28,7 +27,6 @@ class PokemonEntity(models.Model):
     strength = models.IntegerField(null=True, blank=True, verbose_name='Сила')
     defence = models.IntegerField(null=True, blank=True, verbose_name='Защита')
     stamina = models.IntegerField(null=True, blank=True, verbose_name='Выносливость')
-    objects = models.Manager()
     
     def __str__(self):
         return self.pokemon.title_ru
