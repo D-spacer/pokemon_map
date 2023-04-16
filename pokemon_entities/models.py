@@ -23,11 +23,11 @@ class PokemonEntity(models.Model):
     pokemon = models.ForeignKey(Pokemon, on_delete=models.DO_NOTHING, related_name='entities')
     appeared_at = models.DateTimeField(null=True, verbose_name='Время появления')
     disappeared_at = models.DateTimeField(null=True, verbose_name='Время исчезновения')
-    level = models.IntegerField(null=True, verbose_name='Уровень')
-    health = models.IntegerField(null=True, verbose_name='Здоровье')
-    strength = models.IntegerField(null=True, verbose_name='Сила')
-    defence = models.IntegerField(null=True, verbose_name='Защита')
-    stamina = models.IntegerField(null=True, verbose_name='Выносливость')
+    level = models.IntegerField(null=True, blank=True, verbose_name='Уровень')
+    health = models.IntegerField(null=True, blank=True, verbose_name='Здоровье')
+    strength = models.IntegerField(null=True, blank=True, verbose_name='Сила')
+    defence = models.IntegerField(null=True, blank=True, verbose_name='Защита')
+    stamina = models.IntegerField(null=True, blank=True, verbose_name='Выносливость')
     objects = models.Manager()
     
     def __str__(self):
