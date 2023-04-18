@@ -3,8 +3,7 @@ import json
 
 
 from django.utils.timezone import localtime
-from django.http import HttpResponseNotFound
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from pokemon_entities.models import PokemonEntity, Pokemon
 
 MOSCOW_CENTER = [55.751244, 37.618423]
